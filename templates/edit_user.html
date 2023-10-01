@@ -1,0 +1,141 @@
+{% include "header.html" %}
+<style>
+    body {
+    font-family: Arial, sans-serif;
+color:black;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.edit-user-form {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 80%;
+    text-align: left;
+}
+
+h1 {
+    background-color:;
+    color: black;
+    padding: 20px;
+    margin: 0;
+}
+
+table {
+    width: 100%;
+}
+
+table td {
+    padding: 10px;
+    margin-left:10px;
+}
+
+label {
+    font-weight: bold;
+    color:black;
+
+}
+
+input[type="text"],
+input[type="email"],
+select,
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+}
+
+input[type="submit"],
+a.close-button {
+    background-color: #492564;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+    background-shadow:;
+}
+
+input[type="submit"]:hover,
+a.close-button:hover {
+
+
+
+
+</style>
+<body>
+ <!-- Flash messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li style="color: {% if 'error' in message %}red{% else %}green{% endif %};">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+<div class="admin-panel">
+    <!-- Edit User Form -->
+    <div class="edit-user-form">
+        <h1>Edit {{ user[1] }}'s Account</h1>
+        <form method="POST">
+
+            <!-- Table-like design -->
+            <table>
+                <tr>
+                    <td><label for="first_name">First Name:</label></td>
+                    <td><input type="text" name="first_name" value="{{ user[1] }}" required></td>
+                </tr>
+                <tr>
+                    <td><label for="last_name">Last Name:</label></td>
+                    <td><input type="text" name="last_name" value="{{ user[2] }}" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email:</label></td>
+                    <td><input type="email" name="email" value="{{ user[3] }}" required></td>
+                </tr>
+                <tr>
+                    <td><label for="user_role">User Role:</label></td>
+                    <td>
+                        <select name="user_role" required>
+                            <option value="student" {% if user.user_role != 'student' %}selected{% endif %}>Student</option>
+                            <option value="teacher" {% if user.user_role != 'teacher' %}selected{% endif %}>Teacher</option>
+                            <option value="admin" {% if user.user_role != 'admin' %}selected{% endif %}>Admin</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input type="password" name="password" value="{{ user[9] }}"></td>
+                </tr>
+            </table>
+
+            <br>
+            <input type="submit" value="UPDATE">
+             <a class="close-button" href="{{ url_for('users') }}" >Cancel</a>
+        </form>
+
+
+
+    </div>
+</div>
+</body>
+<script>$('#header_page_title').html('Manage Users');</script>
+
+{% include "footer.html" %}

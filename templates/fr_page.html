@@ -1,0 +1,124 @@
+{% include "header.html" %}
+
+<div class="content">
+
+<div class="container-fluid">
+    <div class="row mb-5">
+
+        <!--div class="col-md-12">
+
+            <button onclick="$('#addfaceimg').attr('src','{{ url_for('video_feed') }}'); $('#addfaceimg').show(); $('#addfacestart').hide(); $('#addfacestop').show();" id="addfacestart" class="btn btn-warning btn-lg">Start</button>
+            <button onclick="$('#addfaceimg').attr('src',''); $('#addfaceimg').hide(); $('#addfacestart').show(); $('#addfacestop').hide();" style="display:none;" class="btn btn-warning btn-lg" id="addfacestop">Stop</button>
+        </div-->
+
+        <div class="col-md-8">
+            <!--img src="{{ url_for('video_feed') }}" width="100%" class="img-thumbnail"-->
+            <img style="display: block; width: 80%;" class="img-thumbnail" id="addfaceimg">
+
+        </div>
+
+        <div class="col-md-4" style="height:500px; width:300px; padding:10px; overflow-y:auto; text-transform:capitalize;"><p id="demo"></p>
+
+            <h3>Today's Attendance</h3>
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th>SrNo. #</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Attendance Time</th>
+                    </tr>
+                </thead>
+                <tbody id="scandata">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+{% include "footer.html" %}
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        let lastcnt = 0;
+        let cnt;
+        chkNewScan();
+
+        function chkNewScan() {
+            countTodayScan();
+            setTimeout(chkNewScan, 5000);
+        }
+
+        function countTodayScan() {
+            $.ajax({
+                url: '/countTodayScan',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    cnt = data.rowcount;
+                    if (cnt > lastcnt) {
+                        reloadTable();
+                    }
+
+                    lastcnt = cnt;
+                },
+                error: function(result){
+                    console.log('no result!')
+                }
+            })
+        }
+
+        function reloadTable() {
+            $.ajax({
+                url: '/loadData',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response){
+                    var tr = $("#scandata");
+                    tr.empty();
+
+                    $.each(response, function(index, item) {
+                        if (item.length > 0) {
+                            for (let i = 0; i < item.length; i++) {
+                                tr.append('<tr>'+
+                                                '<td>'+parseInt(i+1)+'</td>'+
+                                                '<td>'+item[i][2]+'</td>'+
+                                                '<td>'+item[i][3]+'</td>'+
+                                                '<td>'+item[i][4]+'</td>'+
+                                           '</tr>');
+                            }
+                        }
+                    });
+                },
+                error: function(result){
+                    console.log('no result!')
+                }
+            });
+        }
+    });
+
+    $('.header_nav').removeClass('active');
+	$('.fr_page').addClass('active');
+	$('#header_page_title').html('Mark Attendance');
+
+	{% if session.attendanceduration != 0 and data1 == "no" %}
+	$('#addfaceimg').attr('src','{{ url_for('video_feed') }}'); $('#addfaceimg').show();
+    //$('#addfacestart').hide();
+
+	var duration = parseInt({{session.attendanceduration}})*60*1000;
+	let myVar = setInterval(myTimer, duration);
+function myTimer() {
+  const d = new Date();
+  document.getElementById("demo").innerHTML = d.toLocaleTimeString();
+  clearInterval(myVar);
+  $('#addfaceimg').attr('src',''); $('#addfaceimg').hide();
+}
+//alert({{ session.attendanceduration }});
+{% endif %}
+
+</script>
+
+</body>
+</html>

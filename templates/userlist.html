@@ -1,0 +1,219 @@
+{% include "header.html" %}
+<style>
+
+ td .tablephoto img{
+    border-radius:50%;
+    height:70px;
+    width:70px;
+    border:0.5px solid white;
+    box-shadow:1px 1px 3px 1px black ;
+    }
+    div .card{
+    margin:auto;
+    max-width:1200px;
+    }
+
+</style>
+<script>
+	function invite(userlistid){
+			var group_id = $('#invite_select_'+userlistid).val();
+			//alert(userlistid);
+		   location.href='/group_functions?group_id='+group_id+'&userlistid='+userlistid+'&rurl=userlist&action=invite';
+		}
+</script>
+
+ <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-icon" data-background-color="purple">
+                                    <i class="material-icons">assignment</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Student lists</h4>
+                                    <div class="toolbar">
+                                        <!--        Here you can write extra buttons/actions for the toolbar              -->
+                                    </div>
+                                    {{msg}}
+                                    <form role="form" action="/group_functions" method="post">
+                                    <div class="material-datatables">
+                                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%; text-transform:capitalize;">
+                                            <thead>
+                                                <tr>
+                                                    <th><input  type="checkbox" name="select-all" id="select-all" /></th>
+                                                    <th>Photo</th>
+                                                    <th>Fist Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Email</th>
+                                                    <th>Group</th>
+                                                    <th>Add Student</th>
+                                                    <th class="disabled-sorting text-right">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>All</th>
+                                                    <th>Photo</th>
+                                                    <th>Fist Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Email</th>
+                                                    <th>Group</th>
+                                                    <th>Add Student</th>
+                                                    <th class="text-right">Actions</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                {% for item in data %}
+
+                                                <tr>
+                                                    <td><input type="checkbox" name="userlist[]" value="{{ item[1] }}"></td>
+                                                    <td>
+
+                                                        <div class="tablephoto">
+                                                        {% if item[14] != '' %}
+                                                          <img src="{{ url_for('static', filename='user_photo/') }}{{ item[14] }}" />
+                                                        {% else %}
+                                                          <img src="{{ url_for('static', filename='assets/img/faces/avatar.jpg') }}" />
+                                                        {% endif %}
+                                                        </div>
+
+                                                    </td>
+                                                    <td>{{ item[2] }}<!--{% if item[0] != '' and item[0] != None %} * {% endif %}--></td>
+                                                    <td>{{ item[3] }}</td>
+                                                    <td>{{ item[4] }}</td>
+                                                    <td><span id="gitem_{{ item[1] }}"></span></td>
+													<td>
+													<select id="invite_select_{{ item[1] }}" name="sn{{ item[1] }}" style="width:auto;">
+													{% for item1 in data1 %}
+                                                        {% for item2 in data2 %}
+                                                           {% if item1[0] == item2[1] and item[1] == item2[2]: %}
+												        <option value="{{ item1[0] }}" class="op{{ item[1] }}{{ item1[0] }}">{{ item1[1] }}</option>
+                                                        <script>$('#gitem_{{ item[1] }}').append('{{ item1[1] }}, ');</script>
+                                                           {% endif %}
+                                                        {% endfor %}
+                                                        <option value="{{ item1[0] }}" class="op{{ item[1] }}{{ item1[0] }}">{{ item1[1] }}</option>
+												    {% endfor %}
+													</select>
+													<button type="button" onClick="invite({{ item[1] }});">Add</button>
+
+													</td>
+                                                    <script>
+
+var usedNames{{ item[1] }} = {};
+var usedNamesd{{ item[1] }} = {};
+$("select[name='sn{{ item[1] }}'] > option").each(function () {
+    if(usedNames{{ item[1] }}[this.text]) {
+        $(this).remove();
+        usedNamesd{{ item[1] }}[this.text] = this.value;
+    } else {
+        usedNames{{ item[1] }}[this.text] = this.value;
+    }
+});
+
+$("select[name='sn{{ item[1] }}'] > option").each(function () {
+    if(usedNamesd{{ item[1] }}[this.text]) {
+        $(this).remove();
+    } else {
+        //usedNamesd{{ item[1] }}[this.text] = this.value;
+    }
+
+});
+
+                                                    </script>
+                                                    <td class="text-right">
+                                                        <!--a href="#" class="btn btn-simple btn-info btn-icon like"><i class="material-icons">favorite</i></a-->
+                                                        <a href="/updateprofile?id={{ item[1] }}" class="btn btn-simple btn-warning btn-icon edit"><i class="material-icons">dvr</i></a>
+                                                        <!--a href="#" class="btn btn-simple btn-danger btn-icon remove"><i class="material-icons">close</i></a-->
+                                                    </td>
+                                                </tr>
+												{% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                        <div class="form-group row">
+                                        <label for="select_group" class="col-sm-1 col-form-label">Select Group</label>
+                                        <div class="col-sm-2">
+                                            <select class="form-control" name="select_group" id="select_group">
+                                            {% for item1 in data1 %}
+                                            <option value="{{ item1[0] }}">{{ item1[1] }}</option>
+                                            {% endfor %}
+                                            </select>
+                                         </div>
+                                        <button type="submit" class="btn btn-fill btn-rose">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- end content-->
+                            </div>
+                            <!--  end card  -->
+                        </div>
+                        <!-- end col-md-12 -->
+                    </div>
+                    <!-- end row -->
+                </div>
+            </div>
+
+{% include "footer.html" %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatables').DataTable({
+            "pagingType": "full_numbers",
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ],
+            responsive: true,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search records",
+            }
+
+        });
+
+
+        var table = $('#datatables').DataTable();
+
+        // Edit record
+        table.on('click', '.edit', function() {
+            $tr = $(this).closest('tr');
+
+            var data = table.row($tr).data();
+            //alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+        });
+
+        // Delete a record
+        table.on('click', '.remove', function(e) {
+            $tr = $(this).closest('tr');
+            table.row($tr).remove().draw();
+            e.preventDefault();
+        });
+
+        //Like record
+        table.on('click', '.like', function() {
+            alert('You clicked on Like button');
+        });
+
+        $('.card .material-datatables label').addClass('form-group');
+
+    });
+
+	$('.header_nav').removeClass('active');
+	$('.userlist').addClass('active');
+	$('#header_page_title').html('Student lists');
+
+	// Listen for click on toggle checkbox
+$('#select-all').click(function(event) {
+    if(this.checked) {
+        // Iterate each checkbox
+        $(':checkbox').each(function() {
+            this.checked = true;
+        });
+    } else {
+        $(':checkbox').each(function() {
+            this.checked = false;
+        });
+    }
+});
+</script>
+{% include "footer.html" %}

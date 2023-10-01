@@ -1,0 +1,40 @@
+{% include "header.html" %}
+
+ <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header card-header-icon" data-background-color="purple">
+                                    <i class="material-icons">assignment</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Group Join Request</h4>
+                                    <div class="toolbar">
+                                        <!--        Here you can write extra buttons/actions for the toolbar              -->
+                                    </div>
+                                    <form name="joinrequest" method="post" action="">
+                                         <h4 class="card-title">{{ groupname }} Group, <b> Teacher : {{ groupteacher }} </b></h4>
+                                        <input type="submit" name="accept" value="Accept" class='btn btn-fill btn-rose'>
+                                        <input type="submit" name="reject" value="Reject" class='btn btn-fill btn-orange'>
+                                    </form>
+                                </div>
+                                <!-- end content-->
+                            </div>
+                            <!--  end card  -->
+                        </div>
+                        <!-- end col-md-12 -->
+
+                    </div>
+                    <!-- end row -->
+                </div>
+            </div>
+
+{% include "footer.html" %}
+<script type="text/javascript">
+
+	$('.header_nav').removeClass('active');
+	$('.grouprequest').addClass('active');
+	$('#header_page_title').html('Group joining request');
+</script>
+

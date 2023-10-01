@@ -1,0 +1,180 @@
+
+{% include "header.html" %}
+<style>
+    .form-control{
+    font-size:25px;
+    }
+    div .input-group{
+        font-size:25px;
+        margin:5px;
+    }
+    /* Increase the size of the Build Your Profile box */
+    .wizard-card {
+
+        width: 120%  ; /* Adjust the width as needed */
+        margin-top:50px;
+        margin: auto ; /* Center the box horizontally */
+
+        padding: 5px; /* Add padding to the box */
+        font-size: 25px; /* Increase the font size */
+        background-color:#f6f6f6;
+        left:-100px;
+    }
+
+</style>
+
+ <div class="content">
+
+                <div class="container-fluid">
+
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <!--      Wizard container        -->
+
+                        <div class="wizard-container">
+
+
+                            <div class="card wizard-card" data-color="rose" id="wizardProfile">
+
+
+                                <form name="ffk3" method="post" enctype="multipart/form-data" action="/updateownprofile">
+                                    <!--        You can switch " data-color="purple" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
+                                    <div class="wizard-header">
+                                        <h3 class="wizard-title">
+
+                                            Build Your Profile
+                                        </h3>
+                                        <h5>This information will let us know more about you.</h5>
+                                    </div>
+                                    <div class="wizard-navigation" >
+                                        <ul>
+                                            <li>
+                                                <a href="#about" style="color: white;" data-toggle="tab">About</a>
+                                            </li>
+                                            <li>
+                                                <a href="#account" style="color: white;" data-toggle="tab">More details</a>
+                                            </li>
+                                            <!--li>
+                                                <a href="#address" data-toggle="tab">Address</a>
+                                            </li-->
+                                        </ul>
+                                    </div>
+                                    <div class="tab-content">
+                                        <div class="tab-pane" id="about">
+                                            <div class="row">
+                                                <!--h4 class="info-text"> Let's start with the basic information </h4-->
+                                                <div class="col-sm-4 col-sm-offset-1">
+                                                    <div class="picture-container">
+                                                        <div class="picture">
+															{% if account[13]!='' %}
+                                                            <img src="{{ url_for('static', filename='user_photo/') }}{{ account[13] }}" class="picture-src" id="wizardPicturePreview" title="">
+									                        {% else %}
+									                         <img src="{{ url_for('static', filename='assets/img/default-avatar.png') }}" class="picture-src" id="wizardPicturePreview" title="" />
+                                                            {% endif %}
+                                                            <input type="file" id="wizard-picture" name="fileToUpload">
+															<input type="hidden" name="photo" value="{{ account[13] }}" />
+                                                        </div>
+                                                        <h6>Choose Picture</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="material-icons">face</i>
+                                                        </span>
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label" style="color:black;" >First Name
+                                                                <small>(required)</small>
+                                                            </label>
+                                                            <input name="first_name" type="text" class="form-control" style="color:black;" value="{{ account[1] }}" onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)">
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="material-icons">record_voice_over</i>
+                                                        </span>
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label" style="color:black;" >Last Name
+                                                                <small>(required)</small>
+                                                            </label>
+                                                            <input name="last_name" type="text" class="form-control" style="color:black;" value="{{ account[2] }}" onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)">
+                                                        </div>
+                                                    </div>
+													<div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="material-icons">person</i>
+                                                        </span>
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label" style="color:black;" >ID
+                                                                <small>(required)</small>
+                                                            </label>
+                                                            <input name="i_d" type="text" class="form-control" style="color:black;" value="{{ account[15] }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                 <div class="col-lg-10 col-lg-offset-1">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="material-icons">email</i>
+                                                        </span>
+                                                        <div class="form-group label-floating">
+                                                            <label class="control-label">Email
+                                                                <small>(required)</small>
+                                                            </label>
+                                                            <input name="email" type="email" class="form-control" style="color:black;" value="{{ account[3] }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="account">
+                                            <!--h4 class="info-text"> What are you doing? </h4-->
+                                            <div class="row">
+                                                <div class="col-lg-10 col-lg-offset-1">
+                                                    <div class="col-sm-7 col-sm-offset-1">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label" style="color:black;" >Phone</label>
+                                                        <input type="tel" class="form-control" name="phone" style="color:black;" value="{{ account[4] }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label" style="top: -24px; font-size:11px; color:black;">Date of birth</label>
+                                                        <input type="date" class="form-control" name="dob" style="color:black;" value="{{ account[12] }}">
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="wizard-footer">
+                                        <div class="pull-right">
+                                            <input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='next' value='Next' />
+                                            <input type='submit'  name="submit" class='btn btn-finish btn-fill btn-rose btn-wd' name='finish' value='Finish' />
+                                        </div>
+                                        <div class="pull-left">
+                                            <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- wizard container  -->
+                    </div>
+                </div>
+            </div>
+
+
+{% include "footer.html" %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        demo.initMaterialWizard();
+        setTimeout(function() {
+            $('.card.wizard-card').addClass('active');
+        }, 600);
+    });
+
+	$('.header_nav').removeClass('active');
+	$('.updateownprofile').addClass('active');
+	$('#header_page_title').html('Profile');
+</script>

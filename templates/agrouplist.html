@@ -1,0 +1,708 @@
+{% include "header.html" %}
+<script src="{{ url_for('static', filename='assets/js/Chart.min.js') }}" type="text/javascript"></script>
+<script>
+	function invite(group_id){
+			var userlistid = $('#invite_select').val();
+			//alert(group_id);
+		   location.href='/agrouplist?group_id='+group_id+'&userlist_id='+userlistid+'&rurl=agrouplist&action=invite';
+		}
+</script>
+<style>
+    .wizard-card .tab-content {
+     min-height: 40px;
+    padding: 20px 15px;
+}
+.wizard-card {
+     min-height: 10px;
+    }
+
+  #chart-container {
+    width: 100%;
+    height: auto;
+}
+    .tablephoto img{
+    border-radius:50%;
+    height:70px;
+    width:70px;
+    padding:5px;
+
+    }
+    .table{
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    }
+
+
+</style>
+ <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+
+
+						<div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header card-header-icon" data-background-color="rose">
+                                    <i class="material-icons">mail_outline</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title" style="text-transform:capitalize;"><b>Group :</b> {{ groupname }} , &nbsp; <b> Teacher : </b>{{ groupteacher }} </h4>
+                                        {% if data1 %}
+                                        <div class="form-group label-floating">
+                                             <div class="material-datatables">
+                                        <table id="datatables1" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%; text-transform:capitalize;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Photo</th>
+                                                    <th>Students Name</th>
+                                                    <!--th>Role</th-->
+                                                    <th>Attendance</th>
+                                                    <th>Remove Student</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Photo</th>
+                                                    <th>Students Name</th>
+                                                    <!--th>Role</th-->
+                                                    <th>Attendance</th>
+                                                    <th>Remove Student</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+												{% for item in data1 %}
+                                                <tr>
+                                                    <td>
+
+                                                        <div class="tablephoto">
+                                                        {% if item[4] != '' %}
+                                                          <img src="{{ url_for('static', filename='user_photo/') }}{{ item[4] }}" />
+                                                        {% else %}
+                                                          <img src="{{ url_for('static', filename='assets/img/faces/avatar.jpg') }}" />
+                                                        {% endif %}
+                                                        </div>
+
+                                                    </td>
+                                                    <td>{{ item[0] }}&nbsp;{{ item[1] }}</td>
+												    <!--td>{% if item[2] == 'teacher' %}
+														  teacher
+													 {% else %}
+														 Users
+													 {% endif %}
+													</td-->
+                                                    <td><a href='/agrouplist?userlist_id={{ item[3] }}&action=view_report'>View</a></td>
+                                                    <td><a href='/agrouplist?userlist_id={{ item[3] }}&group_id={{ group_id }}&rurl=agrouplist&action=remove' onclick="return confirm('Are you sure you want to remove this student?')">Remove</a></td>
+												 </tr>
+                                               {% endfor %}
+											</tbody>
+                                        </table>
+                                    </div>
+                                        </div>
+                                <!--div class="col-md-6">
+                                  <a href='/fr_page?group_id={{ group_id }}&action=view_members&groupteacher={{ groupteacher }}&groupname={{ groupname }}'><input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='Mark attendance' value='Mark attendance' /></a>
+                                </div-->
+
+                                <div class="col-md-12">
+
+                                  <!--div-- class="card wizard-card" data-color="rose" id="wizardProfile">
+
+                                        <center><h5>Attendance Mode.</h5></center>
+
+                                    <div class="wizard-navigation">
+                                        <ul>
+                                            <li>
+                                                <a href="#automatic" data-toggle="tab">Manual Mark attendance</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#timing" data-toggle="tab">Automatic Mark attendance</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                      <div class="tab-content">
+                                        <div class="tab-pane" id="automatic">
+                                            <div class="row">
+                                                <h4 class="info-text"> Automatically pick the current time. </h4>
+                                                <a href="/fr_page?group_id={{ group_id }}&action=view_members&groupteacher={{ groupteacher }}&groupname={{ groupname }}&time=auto" id="autoa"><input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='Mark attendance' value='Mark attendance' /></a>
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="manual">
+                                            <div class="row">
+                                                <h4 class="info-text"> Set the time manually. </h4>
+                                                <label for="selecttime">Set time: </label>
+                                                <select id="selecttime" onchange="settimeurl('manuala');" class='btn btn-next btn-fill btn-wd'><option>01:00</option><option>02:00</option><option>03:00</option><option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option><option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option><option>24:00</option></select>
+                                                <a href='/fr_page?group_id={{ group_id }}&action=view_members&groupteacher={{ groupteacher }}&groupname={{ groupname }}&time=01:00' id="manuala"><input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='Mark attendance' value='Mark attendance' /></a>
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="timing">
+                                            <div class="row">
+                                                <h4 class="info-text"> Set the time. </h4>
+                                                <label for="settiming">Set time: </label>
+                                                <input type="time" value="01:00" id="settiming" onchange="settimeurl('timinga');" class='btn btn-next1 btn-fill1 btn-wd1'>
+                                                <label for="setduration">Set duration: </label>
+                                                <input type="number" name="setduration" id="setduration" onchange="settimeurl('timinga');" value="10" min="1" max="400" class='btn btn-next1 btn-fill1 btn-wd1'> min
+                                                <a href='/fr_page?group_id={{ group_id }}&action=view_members&groupteacher={{ groupteacher }}&groupname={{ groupname }}&time=01:00&duration=10' id="timinga"><input type='button' class='btn btn-next1 btn-fill btn-rose btn-wd' name='Mark attendance' value='Mark attendance' /></a>
+
+                                            </div>
+                                        </div>
+                                      </div>
+                                  </div-->
+
+
+                                </div>
+
+                                        {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                                  <div class="card wizard-card" data-color="rose" id="wizardProfile">
+
+                                        <center><h5>Attendance</h5></center>
+
+                                    <div class="wizard-navigation">
+                                        <ul>
+                                            <li>
+                                                <a href="#setrandom" data-toggle="tab">Set Attendance</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#automatic" data-toggle="tab">Today's Attendance</a>
+                                            </li>
+                                            <li>
+                                                <a href="#Completedtiming" data-toggle="tab">Completed Attendance</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                      <div class="tab-content">
+                                        <div class="tab-pane" id="setrandom">
+                                            <div class="row">
+                                                <form method="post" action="/setrandomattendance">
+                                                <h4 class="info-text"> Set random attendance time. </h4>
+                                                <div class="col-md-12">
+                                                     <div class="col-md-6">
+                                                <label for="setstarttime">Set start time: </label>
+                                                <input type="time" value="01:00" id="setstarttime" class='btn btn-next1 btn-fill1 btn-wd1'>
+                                                     </div>
+                                                    <div class="col-md-6">
+                                                <label for="setendtime">Set end time: </label>
+                                                <input type="time" value="02:00" id="setendtime" class='btn btn-next1 btn-fill1 btn-wd1'>
+                                                    </div>
+                                                </div>
+                                                    <div class="col-md-12">
+                                                     <div class="col-md-6">
+                                                <label for="setattenduration">Set duration: &nbsp;</label>
+                                                <input type="number" name="duration" id="setattenduration" onchange="settimeurl('timinga');" value="1" min="1" max="400" class='btn btn-next1 btn-fill1 btn-wd1'> min
+                                                </div>
+                                                    <div class="col-md-6">
+                                                         <label for="setrandomno">No. of attendance: </label>
+                                                <input type="number" name="setduration" id="setrandomno" onchange="settimeurl('timinga');" value="6" min="1" max="400" class='btn btn-next1 btn-fill1 btn-wd1'>
+                                                </div>
+                                                    </div>
+
+                                                <button type="button" class="btn btn-next1 btn-fill btn-rose btn-wd" id="setrandombtn">Set Random Times</button>
+                                                <div id="rdiv"></div>
+                                                <input type="submit" id="saverandomtimes" name="submit" value="Submit" style="display:none;" class="btn btn-next1 btn-fill btn-rose pull-right btn-wd1">
+                                                <input type="hidden" name="group_id" value="{{ group_id }}">
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="automatic">
+                                            <div class="row">
+
+                                                <div class="col-md-6" style="height:400px; overflow-y:auto; text-transform:capitalize;">
+
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="randomscandata">
+                  {% for item in data3 %}
+                                                <tr>
+                                                    <td>{{ item[3] }}</td>
+                                                    <td>{{ item[4] }} min</td>
+                                                    <td>{{ item[5] }} </td>
+                                                </tr>
+												{% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="manual">
+                                            <div class="row">
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="Completedtiming">
+                                            <div class="row">
+
+                                                <div class="col-md-6" style="height:400px; overflow-y:auto; text-transform:capitalize;">
+
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="randomscandata2">
+                  {% for item in data4 %}
+                                                <tr>
+                                                    <td>{{ item[3] }}</td>
+                                                    <td>{{ item[4] }} min</td>
+                                                    <td>Completed </td>
+                                                </tr>
+												{% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+                                            </div>
+                                        </div>
+                                      </div>
+                                  </div>
+
+
+                                </div>
+
+
+
+
+                        {% if data1 %}
+                        <div class="col-md-6">
+                            <div class="card">
+                        <div id="chart-container">
+                          <canvas id="graphCanvas"></canvas>
+                        </div>
+                                </div>
+                        </div>
+                        {% endif %}
+
+                        {% if data != "" %}
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header card-header-icon" data-background-color="purple">
+                                    <i class="material-icons">assignment</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Report</h4>
+                                    <div class="toolbar">
+                                        <!--        Here you can write extra buttons/actions for the toolbar              -->
+                                    </div>
+                                    <div class="material-datatables">
+                                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%; text-transform:capitalize;">
+                                            <thead>
+                                                <tr>
+                                                     <!--th>Person #</th-->
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Added</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                     <!--th>Person #</th-->
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Added</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+												{% for item in data %}
+                                                <tr>
+                                                    <!--td>{{ item[0] }}</td-->
+                                                    <td>{{ item[2] }}</td>
+													<td>{{ item[3] }}</td>
+                                                    <td>
+                                                        {{ item[4] }}
+                                                    </td>
+                                                </tr>
+												{% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- end content-->
+                            </div>
+                            <!--  end card  -->
+                        </div>
+                        <!-- end col-md-12 -->
+                        {% endif %}
+
+                    </div>
+                    <!-- end row -->
+                </div>
+            </div>
+
+{% include "footer.html" %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatables1').DataTable({
+            "pagingType": "full_numbers",
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ],
+            responsive: true,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search records",
+            }
+
+        });
+
+
+        var table = $('#datatables1').DataTable();
+
+        // Edit record
+        table.on('click', '.edit', function() {
+            $tr = $(this).closest('tr');
+
+            var data = table.row($tr).data();
+            //alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+        });
+
+        // Delete a record
+        table.on('click', '.remove', function(e) {
+            $tr = $(this).closest('tr');
+            table.row($tr).remove().draw();
+            e.preventDefault();
+        });
+
+        //Like record
+        table.on('click', '.like', function() {
+            alert('You clicked on Like button');
+        });
+
+        $('.card .material-datatables label').addClass('form-group');
+    });
+
+    $(document).ready(function() {
+        $('#datatables').DataTable({
+            "pagingType": "full_numbers",
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ],
+            responsive: true,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search records",
+            }
+
+        });
+
+
+        var table = $('#datatables').DataTable();
+
+        // Edit record
+        table.on('click', '.edit', function() {
+            $tr = $(this).closest('tr');
+
+            var data = table.row($tr).data();
+            //alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+        });
+
+        // Delete a record
+        table.on('click', '.remove', function(e) {
+            $tr = $(this).closest('tr');
+            table.row($tr).remove().draw();
+            e.preventDefault();
+        });
+
+        //Like record
+        table.on('click', '.like', function() {
+            alert('You clicked on Like button');
+        });
+
+        $('.card .material-datatables label').addClass('form-group');
+    });
+
+	$('.header_nav').removeClass('active');
+	$('.groups').addClass('active');
+	$('#header_page_title').html('Group');
+
+	//var Url = document.getElementById("url");
+  //Url.innerHTML = window.location.href;
+
+	function Copy() {
+  var Url = document.getElementById("url");
+  // Url.innerHTML = window.location.href;
+  console.log(Url.innerHTML);
+  Url.select();
+  document.execCommand("copy");
+}
+
+ var ct = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+ var aurl = "/fr_page?group_id={{ group_id }}&action=view_members&groupteacher={{ groupteacher }}&groupname={{ groupname }}";
+ aurl = aurl + '&time='+ct;
+ $('#autoa').attr('href',aurl);
+
+function settimeurl(id){
+	//var aurl = $('#'+id).attr('href');
+	//alert(aurl);
+	var v = $('#settiming').val();
+	var aurl = "/fr_page?group_id={{ group_id }}&action=view_members&groupteacher={{ groupteacher }}&groupname={{ groupname }}";
+	aurl = aurl + '&time='+v;
+	var duration = $('#setduration').val();
+	aurl = aurl + '&duration='+duration;
+	$('#'+id).attr('href',aurl);
+	}
+
+$(document).ready(function() {
+        demo.initMaterialWizard();
+        setTimeout(function() {
+            $('.card.wizard-card').addClass('active');
+        }, 600);
+    });
+
+
+function randomTime(start, end) {
+    // get the difference between the 2 dates, multiply it by 0-1,
+    // and add it to the start date to get a new date
+    var diff =  end.getTime() - start.getTime();
+    var new_diff = diff * Math.random();
+    var dates = new Date(start.getTime() + new_diff);
+    var h = String(dates.getHours()).padStart(2, '0');
+    var m = String(dates.getMinutes()).padStart(2, '0');
+    var n = dates.getTime();
+    var t = h+':'+m;
+    return t;
+}
+
+var reA = /[^a-zA-Z]/g;
+var reN = /[^0-9]/g;
+
+function sortAlphaNum(a, b) {
+  var aA = a.replace(reA, "");
+  var bA = b.replace(reA, "");
+  if (aA === bA) {
+    var aN = parseInt(a.replace(reN, ""), 10);
+    var bN = parseInt(b.replace(reN, ""), 10);
+    return aN === bN ? 0 : aN > bN ? 1 : -1;
+  } else {
+    return aA > bA ? 1 : -1;
+  }
+}
+
+var rt = [];
+var srt = [];
+$("#setrandombtn").click(function(){
+            var group_id = {{ group_id }};
+            var start_time = $('#setstarttime').val();
+            var end_time = $('#setendtime').val();
+            var duration = $('#setattenduration').val();
+            var randomno = parseInt($('#setrandomno').val());
+
+            var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+
+today = mm + '-' + dd + '-' + yyyy;
+//console.log(today);
+sdt = today +" "+ start_time;
+edt = today +" "+ end_time;
+//console.log(sdt);
+//console.log(edt);
+
+           rt = [];
+           for(var i=0;i<randomno;i++){
+             //n = randomTime(new Date("08-27-2023 6:30"), new Date("08-27-2023 12:10"));
+             n = randomTime(new Date(sdt), new Date(edt));
+             if(rt.includes(n)){
+
+             }else{
+             rt.push(n);
+             }
+            //console.log(rt);
+           }
+           srt = [];
+           srt = rt.sort(sortAlphaNum);
+           console.log(srt);
+           $('#rdiv').html("");
+           for(var j=0;j<srt.length;j++)
+           {
+              //alert("srt[j]");
+              $('#rdiv').append('<input type="time" name="random_time[]" value="'+srt[j].toString()+'" id="randomtimes_'+j+'" class="btn btn-next1 btn-fill1 btn-wd1">');
+           }
+          //$('#rdiv').append('<br><input type="button" id="saverandomtimes" name="submit" value="Submit" class="btn btn-next1 btn-fill btn-rose pull-right btn-wd1">');
+          $('#saverandomtimes').show();
+
+    });
+
+$("#saverandomtimes1").click(function(){
+
+            var group_id = {{ group_id }};
+            var start_time = $('#setstarttime').val();
+            var end_time = $('#setendtime').val();
+            var duration = $('#setattenduration').val();
+            var randomno = parseInt($('#setrandomno').val());
+            //$('#randomtimes_'+i).val(),
+           // for(var i=0;i<randomno;i++)
+            {
+            //alert(srt);
+            $.ajax({
+            data : {
+                group_id : group_id,
+                random_time : srt,
+                duration : $('#setattenduration').val()
+            },
+            type : 'POST',
+            url : '/setrandomattendance'
+            })
+            .done(function(data){
+            //$('#output').text(data.output).show();
+
+            });
+
+          }
+    location.href='/agrouplist';
+
+});
+
+
+function randomattendancelist() {
+
+ var group_id = {{ group_id }};
+           /*
+            $.ajax({
+                url: '/randomattendancelist',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response){
+                    var tr = $("#randomscandata");
+                    tr.empty();
+
+                    $.each(response, function(index, item) {
+                        if (item.length > 0) {
+                            for (let i = 0; i < item.length; i++) {
+                                tr.append('<tr>'+
+                                                '<td>'+item[i][1]+'</td>'+
+                                                '<td>'+item[i][2]+'</td>'+
+                                                '<td>'+item[i][3]+'</td>'+
+                                                '<td>'+item[i][4]+'</td>'+
+                                           '</tr>');
+                            }
+                        }
+                    });
+                },
+                error: function(result){
+                    console.log('no result!')
+                }
+            });
+            */
+
+
+        }
+
+ randomattendancelist();
+
+</script>
+    <script>
+        $(document).ready(function () {
+            showGraph();
+        });
+
+        function showGraph() {
+            $.ajax({
+                url: '/loadattendanceData',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                     //console.log(response);
+
+                     var name = [];
+                    var marks = [];
+
+                     $.each(response, function(index, item) {
+                       if (item.length > 0) {
+                            for (let i = 0; i < item.length; i++) {
+                                name.push(item[i][1]);
+                                marks.push(item[i][0]);
+                                //console.log(item[i][1]);
+                             }
+                         }
+                    });
+
+                    var chartdata = {
+                        labels: name,
+                        datasets: [
+                            {
+                                label: 'Attendance',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                data: marks
+                            }
+                        ]
+                    };
+
+                    var graphTarget = $("#graphCanvas");
+
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'bar',
+                        data: chartdata
+                    });
+
+                },
+                error: function(result){
+                    console.log('no result!')
+                }
+            })
+        }
+
+        function showGraph1()
+        {
+            {
+                $.post('/loadattendanceData',
+                function (data)
+                {
+                    console.log(data);
+                     var name = [];
+                    var marks = [];
+
+                    for (var i in data) {
+                        name.push(data[i].first_name);
+                        marks.push(data[i].v);
+                        console.log(data[i]);
+                    }
+
+                    var chartdata = {
+                        labels: name,
+                        datasets: [
+                            {
+                                label: 'Attendance',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                data: marks
+                            }
+                        ]
+                    };
+
+                    var graphTarget = $("#graphCanvas");
+
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'bar',
+                        data: chartdata
+                    });
+                });
+            }
+        }
+        </script>

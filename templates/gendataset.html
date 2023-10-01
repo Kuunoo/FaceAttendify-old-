@@ -1,0 +1,99 @@
+{% include "header.html" %}
+<style>
+    #confirmationModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    max-width: 400px;
+    text-align: center;
+    z-index: 1000; /* Adjust the z-index as needed */
+}
+
+.modal-content {
+    text-align: center;
+}
+</style>
+<div class="content" style="background-color:white;">
+                <div class="container-fluid">
+<section class="py-1">
+
+      <div class="row">
+        <div class="col-md-3 offset-lg-2">
+            {% if not user_completed_training %}
+            <button onclick="$('#addfaceimg').attr('src','{{ url_for('vidfeed_dataset', nbr=prs) }}'); $('#addfaceimg').show(); $('#addfacestart').hide(); $('#addfacestop').show(); $('#training').show();" id="addfacestart" class="btn btn-warning btn-lg">Start</button>
+            <button onclick="$('#addfaceimg').attr('src',''); $('#addfaceimg').hide(); $('#addfacestart').show(); $('#addfacestop').hide();" style="display:none;" class="btn btn-warning btn-lg" id="addfacestop">Stop</button>
+
+            <a class="btn btn-warning btn-lg" href="{{ url_for('train_classifier', nbr=prs) }}" id="training" style="display:none;"> Train Face</a>
+             {% else %}
+              <p>You have already completed the process.</p>
+            {% endif %}
+             <p>Your old dataset will be deleted.</p>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-3 offset-lg-2">
+            <!--h3>Generate Dataset {{ prs }}</h3-->
+            <h3>Generate New Dataset</h3>
+            <hr>
+            <!--img src="{{ url_for('vidfeed_dataset', nbr=prs) }}" width="100%" height="100%" class="img-thumbnail1" id="addfaceimg"-->
+            <img width="100%" height="100%" class="img-thumbnail1" id="addfaceimg">
+        </div>
+    </div>
+</section>
+
+                </div>
+</div>
+
+<!-- Modal Dialog -->
+<div id="confirmationModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <p>By clicking the "Agree" button, you are expressly agreeing to our compliance with the Data Privacy Act of 2012. This act underscores our unwavering commitment to safeguarding the privacy and security of your personal information as it pertains to our Attendance Management System utilizing Facial Recognition. We adhere to stringent data protection measures, ensuring that your facial data is handled with the utmost care and in full compliance with the law. This agreement signifies your acknowledgment of our obligations and your trust in us to manage your data responsibly and securely.</p>
+        <button id="okButton" class="btn btn-primary">Agree</button>
+        <button id="cancelButton" class="btn btn-secondary">Cancel</button>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script>
+$('.header_nav').removeClass('active');
+$('.vfdataset_page').addClass('active');
+$('#header_page_title').html('Add faces');
+
+     function startDataset() {
+        $('#addfaceimg').attr('src', '{{ url_for('vidfeed_dataset', nbr=prs) }}');
+        $('#addfaceimg').show();
+        $('#addfacestart').hide();
+        $('#addfacestop').show();
+        $('#training').show(); // Use the updated ID here
+    }
+
+    function stopDataset() {
+        $('#addfaceimg').attr('src', '');
+        $('#addfaceimg').hide();
+        $('#addfacestart').show();
+       $('#training').show(); // Use the updated ID here
+    }
+
+    // Handle the click event of the Train Face button
+    $('#training').click(function (event) {
+        event.preventDefault(); // Prevent the default action
+        // Display the confirmation modal
+        $('#confirmationModal').css('display', 'block');
+    });
+
+    // Close the modal and prevent default action when "Cancel" is clicked
+    $('#cancelButton').click(function () {
+        $('#confirmationModal').css('display', 'none');
+    });
+
+    // Proceed with the action when "OK" is clicked
+    $('#okButton').click(function () {
+        $('#confirmationModal').css('display', 'none');
+        // Navigate to the URL
+        window.location.href = "{{ url_for('train_classifier', nbr=prs) }}";
+    });
+</script>
