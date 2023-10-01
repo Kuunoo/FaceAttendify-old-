@@ -19,11 +19,18 @@ cnt = 0
 pause_cnt = 0
 justscanned = False
 
+user = "iqmlhvyyatv7qono"
+password = "jj36lbg9mfaucuee"
+host = "dcrhg4kh56j13bnu.cbetxkdyhwsb.us-east-1.rds.amazonaws.com"
+port = 3306
+database = "vd2o5djn3ce6mnds"
+
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="",
-    database="zagusopas"
+    host=host,
+    user=user,
+    passwd=password,
+    database=database,
+    port=port
 
 )
 #mycursor = mydb.cursor()
