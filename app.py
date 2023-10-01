@@ -29,7 +29,7 @@ mydb = mysql.connector.connect(
     host=host,
     user=user,
     passwd=password,
-    database=zagusopas,
+    database=database,
     port=port
 
 )
